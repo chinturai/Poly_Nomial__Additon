@@ -1,0 +1,90 @@
+#include<stdio.h>
+
+struct term {
+    int coef;
+    int exp;
+};
+
+struct term poly1[10], poly2[10], result[10];
+
+int inputPoly(struct term[]);
+int addPoly(struct term[], struct term[], int, int, struct term[]);
+void displayPoly(struct term[], int);
+
+int main() {
+    int n1, n2, n3;
+
+    n1 = inputPoly(poly1);
+    printf("First Polynomial: ");
+    displayPoly(poly1, n1);
+
+    n2 = inputPoly(poly2);
+    printf("Second Polynomial: ");
+    displayPoly(poly2, n2);
+
+    n3 = addPoly(poly1, poly2, n1, n2, result);
+    printf("Resultant Polynomial: ");
+    displayPoly(result, n3);
+
+    return 0;
+}
+
+int inputPoly(struct term p[10]) {
+    int n, i;
+
+    printf("Number of terms: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Coefficient(%d): ", i + 1);
+        scanf("%d", &p[i].coef);
+        printf("Exponent(%d): ", i + 1);
+        scanf("%d", &p[i].exp);
+    }
+
+    return n;
+}
+
+int addPoly(struct term p1[10], struct term p2[10], int n1, int n2, struct term res[10]) {
+    int i = 0, j = 0, k = 0;
+
+    while (i < n1 && j < n2) {
+        if (p1[i].exp == p2[j].exp) {
+            res[k].coef = p1[i].coef + p2[j].coef;
+            res[k].exp = p1[i].exp;
+            i++; j++; k++;
+        } else if (p1[i].exp > p2[j].exp) {
+            res[k].coef = p1[i].coef;
+            res[k].exp = p1[i].exp;
+            i++; k++;
+        } else {
+            res[k].coef = p2[j].coef;
+            res[k].exp = p2[j].exp;
+            j++; k++;
+        }
+    }
+
+    while (i < n1) {
+        res[k].coef = p1[i].coef;
+        res[k].exp = p1[i].exp;
+        i++; k++;
+    }
+
+    while (j < n2) {
+        res[k].coef = p2[j].coef;
+        res[k].exp = p2[j].exp;
+        j++; k++;
+    }
+
+    return k;
+}
+
+void displayPoly(struct term p[10], int n) {
+    for (int i = 0; i < n; i++) {
+        if (i != n - 1) {
+            printf("%d(x^%d) + ", p[i].coef, p[i].exp);
+        } else {
+            printf("%d(x^%d)\n", p[i].coef, p[i].exp);
+        }
+    }
+}
